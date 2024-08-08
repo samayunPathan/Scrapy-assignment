@@ -1,3 +1,4 @@
+````
 trip_scraper/
 ├── scrapy.cfg
 ├── requirements.txt
@@ -21,3 +22,4 @@ trip_scraper/
 │       └── selenium_utils.py
 ├── images/
 └── chromedriver  # or chromedriver.exe for Windows
+````
