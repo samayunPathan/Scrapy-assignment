@@ -1,9 +1,45 @@
-import scrapy
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
+# import scrapy
+# import json
 
+# class TripSpider(scrapy.Spider):
+#     name = "trip_spider"
+#     allowed_domains = ["uk.trip.com"]
+#     start_urls = ["https://uk.trip.com/hotels/?locale=en-GB&curr=GBP"]
+
+#     custom_settings = {
+#         'ROBOTSTXT_OBEY': False,
+#     }
+
+#     def parse(self, response):
+#         # Make the AJAX request to fetch the hotel data
+#         ajax_url = "https://m.trip.com/hotels/list/ajax?city=338&checkin=2024/8/2&checkout=2024/08/03"
+#         yield scrapy.Request(ajax_url, callback=self.parse_hotel_data)
+
+#     def parse_hotel_data(self, response):
+#         # Parse the JSON response
+#         data = json.loads(response.text)
+
+#         # Extract the section titles and city names
+#         results = []
+#         for section in data["data"]["hotelList"]:
+#             section_title = section["boundTitle"]
+#             city_names = [city["name"] for city in section["boundCities"]]
+
+#             # Store the title and its cities in a dictionary
+#             section_data = {
+#                 'section_title': section_title,
+#                 'cities': city_names
+#             }
+
+#             # Add the dictionary to the results list
+#             results.append(section_data)
+
+#         # Yield all the results
+#         for result in results:
+#             yield result
+
+import scrapy
+import json
 
 class TripSpider(scrapy.Spider):
     name = "trip_spider"
@@ -14,40 +50,30 @@ class TripSpider(scrapy.Spider):
         'ROBOTSTXT_OBEY': False,
     }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        
-        # Path to npm-installed ChromeDriver
-        chromedriver_path = '/home/w3e63/Desktop/w3 assignment/scrapy/node/node_modules/chromedriver/bin/chromedriver'
-        
-        # Setup Chrome options
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")  # Run Chrome in headless mode
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        
-        # Initialize the WebDriver with the ChromeDriver path
-        self.driver = webdriver.Chrome(service=Service(chromedriver_path), options=chrome_options)
-
     def parse(self, response):
-        # self.driver.get(response.url)
-        
-        # # Wait until the main-topic h1 is present (use appropriate waiting strategy)
-        #  # Extract the h1 element with class name 'main-topic'
-        # main_topic = response.css("h3.boundCities_title").get()
+        # Make the AJAX request to fetch the hotel data
+        ajax_url = "https://m.trip.com/hotels/list/ajax?city=338&checkin=2024/8/2&checkout=2024/08/03"
+        yield scrapy.Request(ajax_url, callback=self.parse_hotel_data)
 
-        # # Yield the result as an item
-        # yield {
-        #     'main_topic': main_topic
-        # }
-                # Wait until the page is fully loaded (use appropriate waiting strategy)
-        self.driver.implicitly_wait(10)
-        
-        # Find the h3 element with the specific class name
-        h3_elements = self.driver.find_elements(By.CLASS_NAME, "boundCities_title")
-        
-        for h3 in h3_elements:
-            print(f"H3 Text: {h3.text}")
-        
-        # Close the browser
-        self.driver.quit()
+    def parse_hotel_data(self, response):
+        # Parse the JSON response
+        data = json.loads(response.text)
+
+        # Extract the section titles and city names
+        results = []
+        for section in data["data"]["hotelList"]:
+            section_title = section["boundTitle"]
+            city_names = [city["name"] for city in section["boundCities"]]
+
+            # Store the title and its cities in a dictionary
+            section_data = {
+                'section_title': section_title,
+                'cities': city_names
+            }
+
+            # Add the dictionary to the results list
+            results.append(section_data)
+
+        # Yield all the results
+        for result in results:
+            yield result
