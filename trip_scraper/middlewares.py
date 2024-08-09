@@ -101,3 +101,20 @@ class TripScraperDownloaderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info("Spider opened: %s" % spider.name)
+        
+
+
+
+# ------- proxy setup ------- 
+
+class CustomProxyMiddleware(object):
+    def __init__(self):
+        self.proxy = 'http://196.51.200.234:8800'
+        print("CustomProxyMiddleware initialized")
+    
+    def process_request(self, request, spider):
+        if 'proxy' not in request.meta:
+            request.meta['proxy'] = self.proxy
+    
+    def get_proxy(self):
+        return self.proxy

@@ -94,6 +94,7 @@ TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
 
 
-
-
-
+# ---- proxy setting ----- 
+DOWNLOADER_MIDDLEWARES = {
+    'trip_scraper.middlewares.CustomProxyMiddleware': 350,
+}
