@@ -8,3 +8,15 @@ with open('page_source.html', 'w', encoding='utf-8') as file:
     file.write(response.text)
 
 print("Page source saved as 'page_source.html'")
+
+<div class="transport">
+<div class="real labelColor">
+<span><div>124</div>
+</div>
+</div>
+
+<div class="transport">
+<span>hello</span>
+<span>world</span>
+<span>hi</span>
+</div>
