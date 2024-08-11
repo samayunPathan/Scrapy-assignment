@@ -179,11 +179,13 @@
 # # =====end  final ==== 
 
 
+
+
 # # ====== dynamic ======
 
 
 
-# # ======   v4 latest =======
+# # ======   database okay  =======
 
 import scrapy
 import json
@@ -191,6 +193,8 @@ import os
 import random
 from urllib.parse import urljoin
 from datetime import datetime, timedelta
+from trip_scraper.utils.database import init_db
+
 
 class TripSpiderv4(scrapy.Spider):
     name = 'trip_dynamic4'
@@ -203,7 +207,10 @@ class TripSpiderv4(scrapy.Spider):
         'ROBOTSTXT_OBEY': False,
         'DOWNLOAD_DELAY': 1,
         'AUTOTHROTTLE_ENABLED': True,
-        'OFFSITE_ENABLED': False
+        'OFFSITE_ENABLED': False,
+        'ITEM_PIPELINES': {
+            'trip_scraper.pipelines.TripScraperPipeline': 300,
+        }
     }
 
     def __init__(self, *args, **kwargs):
@@ -212,6 +219,9 @@ class TripSpiderv4(scrapy.Spider):
         self.checkin_date = (datetime.now() + timedelta(days=1)).strftime("%Y/%m/%d")
         self.checkout_date = (datetime.now() + timedelta(days=2)).strftime("%Y/%m/%d")
         self.urls = []
+
+        # Initialize the database
+        init_db()
 
     def start_requests(self):
         headers = {
@@ -325,7 +335,7 @@ class TripSpiderv4(scrapy.Spider):
             location = hotel.css('.list-card-transport-v8 .transport span::text').getall()[:2]
             room_type = hotel.css('.room-type .room-panel-roominfo-name::text').get()
             price = hotel.css('.whole .real.labelColor div::text').get()
-            image_urls = hotel.css('.multi-images .m-lazyImg.multi-images-item::attr(src)').getall()
+            image_urls = hotel.css('.multi-images .m-lazyImg.multi-images-item .m-lazyImg__img::attr(src)').getall()
 
             yield {
                 'title': title,
@@ -335,6 +345,7 @@ class TripSpiderv4(scrapy.Spider):
                 'room_type': room_type,
                 'price': price,
                 'image_urls': image_urls,
+                'city': city,
             }
 
             image_urls = hotel.css('.multi-images .m-lazyImg.multi-images-item .m-lazyImg__img::attr(src)').getall()
