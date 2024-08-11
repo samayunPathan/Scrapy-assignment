@@ -1,8 +1,13 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from trip_scraper.models.hotel import Base
+import os
+from dotenv import load_dotenv
+# Load environment variables from .env file
+load_dotenv()
 
-DATABASE_URL = "postgresql://postgres:1234@localhost:5432/scrap_data"
+# Database setup
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

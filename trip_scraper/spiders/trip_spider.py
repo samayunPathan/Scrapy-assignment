@@ -1,13 +1,3 @@
-# # ====== dynamic ======
-from geopy.geocoders import Nominatim
-
-geolocator = Nominatim(user_agent="your_app_name")
-location = geolocator.geocode("Marina Bay,Singapore")
-print((location.latitude, location.longitude))
-
-
-# # ======   database okay  =======
-
 import scrapy
 import json
 import os
