@@ -21,5 +21,5 @@ trip_scraper/
 │       ├── database.py
 │       └── selenium_utils.py
 ├── images/
-└── chromedriver  # or chromedriver.exe for Windows
+
 ````

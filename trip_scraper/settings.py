@@ -8,7 +8,6 @@
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 BOT_NAME = "trip_scraper"
-
 SPIDER_MODULES = ["trip_scraper.spiders"]
 NEWSPIDER_MODULE = "trip_scraper.spiders"
 
@@ -51,6 +50,7 @@ ROBOTSTXT_OBEY = True
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
+
 #DOWNLOADER_MIDDLEWARES = {
 #    "trip_scraper.middlewares.TripScraperDownloaderMiddleware": 543,
 #}
@@ -98,3 +98,22 @@ FEED_EXPORT_ENCODING = "utf-8"
 # DOWNLOADER_MIDDLEWARES = {
 #     'trip_scraper.middlewares.CustomProxyMiddleware': 350,
 # }
+
+# Enable or configure middlewares if needed
+DOWNLOADER_MIDDLEWARES = {
+    'trip_scraper.middlewares.TripScraperMiddleware': 543,
+}
+
+ITEM_PIPELINES = {
+    'trip_scraper.pipelines.TripScraperPipeline': 1,
+}
+
+
+# trip_scraper/settings.py
+
+import os
+# from trip_scraper.utils.database import create_database_if_not_exists, create_tables
+
+# Ensure database exists and tables are created before the spider starts
+# create_database_if_not_exists()
+# create_tables()

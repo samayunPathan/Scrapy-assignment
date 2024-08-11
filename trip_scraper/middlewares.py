@@ -9,6 +9,18 @@ from scrapy import signals
 from itemadapter import is_item, ItemAdapter
 
 
+
+# trip_scraper/middlewares.py
+
+class TripScraperMiddleware:
+    def process_request(self, request, spider):
+        # Your logic here
+        pass
+
+    def process_response(self, request, response, spider):
+        # Your logic here
+        return response
+
 class TripScraperSpiderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
