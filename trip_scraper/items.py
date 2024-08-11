@@ -10,6 +10,8 @@ class HotelItem(scrapy.Item):
     rating = scrapy.Field()
     reviews_count = scrapy.Field()
     location = scrapy.Field()
+    latitude: latitude.Field()
+    longitude: longitude.Field()
     room_type = scrapy.Field()
     price = scrapy.Field()
     image_urls = scrapy.Field()

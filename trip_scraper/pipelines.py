@@ -14,6 +14,8 @@ class TripScraperPipeline:
                 rating=float(item['rating']) if item['rating'] else None,
                 reviews_count=item['reviews_count'],
                 location=', '.join(item['location']) if item['location'] else None,
+                latitude=if item['latitude'] else None,
+                longitude=if item['longitude'] else None,
                 room_type=item['room_type'],
                 price=item['price'],
                 image_urls=','.join(item['image_urls']),

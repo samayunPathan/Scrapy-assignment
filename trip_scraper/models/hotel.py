@@ -11,6 +11,8 @@ class Hotel(Base):
     rating = Column(Float)
     reviews_count = Column(String)
     location = Column(String)
+    latitude= Column(Float)
+    longitude=Column(Float)
     room_type = Column(String)
     price = Column(String)
     image_urls = Column(String)
