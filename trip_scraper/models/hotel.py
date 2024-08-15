@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Float
+# In models.py
+from sqlalchemy import create_engine, Column, Integer, String, Float, ARRAY
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -7,16 +8,12 @@ class Hotel(Base):
     __tablename__ = 'hotels'
 
     id = Column(Integer, primary_key=True)
-    title = Column(String)
+    hotelName = Column(String)
+    description = Column(String)
+    lat = Column(Float)
+    lon = Column(Float)
     rating = Column(Float)
-    reviews_count = Column(String)
-    location = Column(String)
-    latitude= Column(Float)
-    longitude=Column(Float)
-    room_type = Column(String)
-    price = Column(String)
-    image_urls = Column(String)
-    city = Column(String)
+    images = Column(ARRAY(String))
+    address = Column(String)
+    cityName = Column(String)
 
-    def __repr__(self):
-        return f"<Hotel(title='{self.title}', rating={self.rating}, price='{self.price}')>"

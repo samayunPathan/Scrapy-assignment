@@ -26,3 +26,6 @@ ITEM_PIPELINES = {
 }
 
 
+ITEM_PIPELINES = {
+   'trip_scraper.pipelines.TripScraperPipeline': 300,
+}

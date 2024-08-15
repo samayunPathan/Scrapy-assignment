@@ -1,37 +1,31 @@
-import logging
-from sqlalchemy.exc import SQLAlchemyError
-from trip_scraper.models.hotel import Hotel
-from trip_scraper.utils.database import SessionLocal
+from sqlalchemy.orm import sessionmaker
+# from trip_scraper.models import Hotel, engine  # Import both Hotel and engine
+from trip_scraper.items import HotelItem
 
 class TripScraperPipeline:
     def __init__(self):
-        self.session = SessionLocal()
+        pass
+        # self.Session = sessionmaker(bind=engine)
 
     def process_item(self, item, spider):
-        try:
-            hotel = Hotel(
-                title=item['title'],
-                rating=float(item['rating']) if item['rating'] else None,
-                reviews_count=item['reviews_count'],
-                location=', '.join(item['location']) if item['location'] else None,
-                latitude=float(item['latitude'])if item['latitude'] else None,
-                longitude=float(item['longitude'])if item['longitude'] else None,
-                room_type=item['room_type'],
-                price=item['price'],
-                image_urls=','.join(item['image_urls']),
-                city=item['city']
+        if isinstance(item, HotelItem):
+            session = self.Session()
+            hotel_instance = Hotel(  # Rename to avoid conflict with the class name
+                hotelName=item['hotelName'],
+                description=item['description'],
+                lat=item['lat'],
+                lon=item['lon'],
+                rating=item['rating'],
+                images=item['images'],
+                address=item['address'],
+                cityName=item['cityName']
             )
-
-            self.session.add(hotel)
-            self.session.commit()
-            logging.info(f"Successfully added hotel: {item['title']}")
-        except SQLAlchemyError as e:
-            logging.error(f"Database error: {str(e)}")
-            self.session.rollback()
-        except Exception as e:
-            logging.error(f"Error processing item: {str(e)}")
-            self.session.rollback()
+            try:
+                session.add(hotel_instance)
+                session.commit()
+            except Exception as e:
+                session.rollback()
+                raise e
+            finally:
+                session.close()
         return item
-
-    def close_spider(self, spider):
-        self.session.close()

@@ -3,15 +3,12 @@ import scrapy
 class TripScraperItem(scrapy.Item):
     pass
 
-import scrapy
-
 class HotelItem(scrapy.Item):
-    title = scrapy.Field()
+    hotelName = scrapy.Field()
+    description = scrapy.Field()
+    lat = scrapy.Field()
+    lon = scrapy.Field()
     rating = scrapy.Field()
-    reviews_count = scrapy.Field()
-    location = scrapy.Field()
-    latitude: latitude.Field()
-    longitude: longitude.Field()
-    room_type = scrapy.Field()
-    price = scrapy.Field()
-    image_urls = scrapy.Field()
+    images = scrapy.Field()
+    address = scrapy.Field()
+    cityName = scrapy.Field()
