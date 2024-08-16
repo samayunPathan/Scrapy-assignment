@@ -75,6 +75,7 @@ class TripSpider(scrapy.Spider):
         amenities_str = ",".join(amenities)  # Convert list to comma-separated string
 
         return HotelItem(
+            hotelId =hotel.get('hotelId'),
             hotelName=hotel.get('hotelName'),
             description=hotel.get('brief'),
             lat=hotel.get('lat'),

@@ -16,7 +16,7 @@ Base = declarative_base()
 class Hotel(Base):
     __tablename__ = 'hotels'
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    hotelId = Column(Integer, primary_key=True)
     hotelName = Column(String(255), nullable=False)
     description = Column(Text)
     lat = Column(Float)
