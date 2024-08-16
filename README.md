@@ -72,24 +72,38 @@ trip_scraper/
 
 
 1. Clone the repository:
-`git clone https://github.com/samayunPathan/Scrapy-assignment.git`
+
+``` bash
+git clone https://github.com/samayunPathan/Scrapy-assignment.git
+```
 
 `cd trip_scraper`
 
 2. Create and activate a virtual environment:
-- Windows
-`python -m venv env`
 
-`source env/scripts/activate`
+- Windows
+``` bash 
+python -m venv env
+```
+
+``` bash
+source env/scripts/activate
+```
 - macOS/Linux:
 
-`python3 -m venv env`
+``` bash 
+python3 -m venv env
+```
 
-`source env/bin/activate`
+``` bash 
+source env/bin/activate
+``` 
 
 3. Install the dependencies:
 
-`pip install -r requirements.txt`
+``` bash 
+pip install -r requirements.txt
+```
 
 
 
@@ -104,7 +118,9 @@ You can configure the Scrapy settings in trip_scraper/settings.py to customize t
 ## Running the Scraper
 To run the scraper and start collecting hotel data, use the following command:
 
-`scrapy crawl trip_spider`
+``` bash 
+scrapy crawl trip_spider
+```
 
 ## Data Model
 
