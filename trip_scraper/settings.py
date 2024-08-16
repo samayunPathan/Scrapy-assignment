@@ -21,9 +21,6 @@ DOWNLOADER_MIDDLEWARES = {
     'trip_scraper.middlewares.TripScraperMiddleware': 543,
 }
 
-ITEM_PIPELINES = {
-    'trip_scraper.pipelines.TripScraperPipeline': 1,
-}
 
 
 ITEM_PIPELINES = {
@@ -31,8 +28,6 @@ ITEM_PIPELINES = {
 }
 
 
-
-# settings.py
 
 
 

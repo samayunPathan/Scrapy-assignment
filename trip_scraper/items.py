@@ -11,5 +11,4 @@ class HotelItem(scrapy.Item):
     cityName = scrapy.Field()
 
 
-# items.py
 
