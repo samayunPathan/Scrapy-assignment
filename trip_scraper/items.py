@@ -6,6 +6,7 @@ class HotelItem(scrapy.Item):
     lat = scrapy.Field()
     lon = scrapy.Field()
     rating = scrapy.Field()
+    amenities = scrapy.Field()  # Corrected field name
     images = scrapy.Field()
     address = scrapy.Field()
     cityName = scrapy.Field()

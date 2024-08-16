@@ -17,18 +17,14 @@ FEED_EXPORT_ENCODING = "utf-8"
 # }
 
 # Enable or configure middlewares if needed
+
 DOWNLOADER_MIDDLEWARES = {
     'trip_scraper.middlewares.TripScraperMiddleware': 543,
 }
 
 
-
 ITEM_PIPELINES = {
    'trip_scraper.pipelines.TripScraperPipeline': 300,
 }
-
-
-
-
 
 

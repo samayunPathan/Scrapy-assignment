@@ -12,13 +12,12 @@ This Trip Scraper project involves building a Scrapy web crawler that fetches lo
 3. [Project Structure](#Project-Structure)
 4. [Installation](#Installation)
 5. [Configuration](#Configuration)
-6. [Data Model](#Data-Model)
-7. [Database Setup](#Database-Setup)
+6. [Database Setup](#Database-Setup)
+7. [Data Model](#Data-Model)
 8. [Scrapy Settings](#Scrapy-Settings)
 9. [Running the Scraper](#Running-the-Scraper)
 10. [Dependencies](#Dependencies)
-10. [Contributing](#contributing)
-11. [License](#license)
+
 
 ## Project Overview
 The Trip Scraper project is designed to gather detailed information about hotels in various locations. It utilizes the Scrapy framework for web scraping and stores the collected data in a PostgreSQL database. The main focus of the scraper is on extracting hotel information such as:
@@ -42,27 +41,26 @@ The Trip Scraper project is designed to gather detailed information about hotels
 ## Project Structure
 ```
 trip_scraper/
-├── scrapy.cfg               # Scrapy project configuration file
-├── requirements.txt         # Python package dependencies
-├── .gitignore               # Git ignore file
-├── README.md                # Project README file
-├── .env                     # Contains environment variables, including database connection url.        
-├── trip_scraper/            # Main Scrapy project directory
+├── scrapy.cfg             
+├── requirements.txt        
+├── .gitignore              
+├── README.md              
+├── .env.sample                     
+├── trip_scraper/            
 │   ├── __init__.py
-│   ├── items.py             # Item definitions for scraped data
-│   ├── middlewares.py       # Middleware components for Scrapy
-│   ├── pipelines.py         # Pipelines for processing scraped data
-│   ├── settings.py          # Project settings for Scrapy
-│   ├── spiders/             # Directory for spider definitions
+│   ├── items.py            
+│   ├── middlewares.py       
+│   ├── pipelines.py         
+│   ├── settings.py         
+│   ├── spiders/             
 │   │   ├── __init__.py
-│   │   └── trip_spider.py   # Main spider for scraping hotels
-│   ├── models/              # Directory for database models
-│   │   ├── __init__.py
-│   │   └── hotel.py         # SQLAlchemy model for hotel data
-│   └── utils/               # Utility scripts
+│   │   └── trip_spider.py   
+│   ├── models/              
 │       ├── __init__.py
-│       ├── database.py      # Database initialization and connection
-├── images/                  # Directory to store downloaded which create automatically
+│       └── hotel.py                        
+│      
+│            
+├── images/                  
 
 ````
 
@@ -73,7 +71,7 @@ trip_scraper/
 
 
 1. Clone the repository:
-`git clone https://github.com/yourusername/trip_scraper.git`
+`git clone https://github.com/samayunPathan/Scrapy-assignment.git`
 
 `cd trip_scraper`
 
@@ -83,6 +81,7 @@ trip_scraper/
 
 `source env/scripts/activate`
 - macOS/Linux:
+
 `python3 -m venv env`
 
 `source env/bin/activate`
@@ -91,19 +90,6 @@ trip_scraper/
 
 `pip install -r requirements.txt`
 
-## Data Model
-The Hotel model in trip_scraper/models/hotel.py defines the structure of the data being scraped and stored:
-
-- title
-- rating
-- reviews_count
-- location
-- latitude
-- longitude
-- room_type
-- price
-- image_urls
-- city
 
 
 ## Database Setup
@@ -119,16 +105,25 @@ To run the scraper and start collecting hotel data, use the following command:
 
 `scrapy crawl trip_spider`
 
+## Data Model
+
+The Hotel model in trip_scraper/models/hotel.py defines the structure of the data being scraped and stored:
+
+- hotelName 
+- description
+- lat 
+- lon 
+- rating 
+- amenities 
+- images 
+- address 
+- cityName 
+
 ## Dependencies
 The project dependencies are listed in the requirements.txt file. They include:
 
-- Scrapy
-- SQLAlchemy
+- scrapy 
+- sqlalchemy
 - psycopg2-binary
-- geopy
+- python-dotenv
 
-## Contributing
-Contributions are welcome! Please open an issue or submit a pull request for any enhancements or bug fixes.
-
-## License
-This project is licensed under the MIT License. See the LICENSE file for more details.

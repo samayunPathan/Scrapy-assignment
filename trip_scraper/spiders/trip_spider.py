@@ -1,83 +1,9 @@
-# import scrapy
-# import json
-# import re
-# from scrapy.http import HtmlResponse
-# from trip_scraper.items import HotelItem
-
-
-# class TripSpider(scrapy.Spider):
-#     name = "trip_spider"
-#     allowed_domains = ["trip.com"]
-#     start_urls = ["https://uk.trip.com/hotels/?locale=en-GB&curr=GBP"]
-
-#     custom_settings = {
-#         'ROBOTSTXT_OBEY': False
-#     }
-
-#     def parse(self, response: HtmlResponse):
-#         # Extract the script tag containing the desired data
-#         script_text = response.xpath(
-#             '//script[contains(text(), "window.IBU_HOTEL")]/text()'
-#         ).get()
-
-#         if script_text:
-#             try:
-#                 # Extract the JSON part of the script using regular expression
-#                 json_str = re.search(r'window\.IBU_HOTEL\s*=\s*(\{.*?\});', script_text, re.DOTALL).group(1)
-#                 json_data = json.loads(json_str).get('initData', {}).get('htlsData', {})
-
-#                 # Extract and yield data for five-star hotels
-#                 for hotel in json_data.get('fiveStarHotels', []):
-#                     yield self.extract_hotel_data(hotel)
-
-#                 # Extract and yield data for cheap hotels
-#                 for hotel in json_data.get('chepHotels', []):
-#                     yield self.extract_hotel_data(hotel)
-
-#                 # Extract and yield data for hostel hotels
-#                 for hotel in json_data.get('hostelHotels', []):
-#                     yield self.extract_hotel_data(hotel)
-
-#                 # Extract and yield data for inbound cities
-#                 for city in json_data.get('inboundCites', []):
-#                     for hotel in city.get('recommendHotels', []):
-#                         yield self.extract_hotel_data(hotel)
-
-#                 # Extract and yield data for outbound cities
-#                 for city in json_data.get('outboundCities', []):
-#                     for hotel in city.get('recommendHotels', []):
-#                         yield self.extract_hotel_data(hotel)
-
-#             except (AttributeError, json.JSONDecodeError) as e:
-#                 self.logger.error(f"Failed to extract JSON data. Error: {str(e)}")
-#         else:
-#             self.logger.error("Script tag not found or empty.")
-
-#     def extract_hotel_data(self, hotel):
-#         """Extract relevant hotel data from the JSON object."""
-#         # Start with imgUrl if available
-#         images = [hotel.get('imgUrl')] if hotel.get('imgUrl') else []
-
-#         # Extend with URLs from pictureList where each entry is a dictionary with 'pictureUrl'
-#         images.extend([pic['pictureUrl'] for pic in hotel.get('pictureList', []) if 'pictureUrl' in pic])
-
-#         return HotelItem (
-#             hotelName= hotel.get('hotelName'),
-#             description=hotel.get('brief'),
-#             lat= hotel.get('lat'),
-#             lon= hotel.get('lon'),
-#             rating= hotel.get('rating'),
-#             images= images,  # Combined list of all image URLs
-#             address= hotel.get('address'),
-#             cityName= hotel.get('cityName')
-#         )
-
-
 import scrapy
 import json
 import re
 import os
 import urllib.request
+import random
 from scrapy.http import HtmlResponse
 from trip_scraper.items import HotelItem
 
@@ -100,30 +26,32 @@ class TripSpider(scrapy.Spider):
         if script_text:
             try:
                 # Extract the JSON part of the script using regular expression
-                json_str = re.search(r'window\.IBU_HOTEL\s*=\s*(\{.*?\});', script_text, re.DOTALL).group(1)
+                json_str = re.search(
+                    r'window\.IBU_HOTEL\s*=\s*(\{.*?\});', script_text, re.DOTALL
+                ).group(1)
                 json_data = json.loads(json_str).get('initData', {}).get('htlsData', {})
 
-                # Extract and yield data for five-star hotels
-                for hotel in json_data.get('fiveStarHotels', []):
-                    yield self.extract_hotel_data(hotel)
+                # Categories to choose from
+                categories = [
+                    ('fiveStarHotels', 'fiveStarHotels'),
+                    ('chepHotels', 'chepHotels'),
+                    ('hostelHotels', 'hostelHotels'),
+                    ('inboundCites', 'inboundCites'),
+                    ('outboundCities', 'outboundCities')
+                ]
 
-                # Extract and yield data for cheap hotels
-                for hotel in json_data.get('chepHotels', []):
-                    yield self.extract_hotel_data(hotel)
+                # Randomly select 3 categories
+                selected_categories = random.sample(categories, 3)
 
-                # Extract and yield data for hostel hotels
-                for hotel in json_data.get('hostelHotels', []):
-                    yield self.extract_hotel_data(hotel)
-
-                # Extract and yield data for inbound cities
-                for city in json_data.get('inboundCites', []):
-                    for hotel in city.get('recommendHotels', []):
-                        yield self.extract_hotel_data(hotel)
-
-                # Extract and yield data for outbound cities
-                for city in json_data.get('outboundCities', []):
-                    for hotel in city.get('recommendHotels', []):
-                        yield self.extract_hotel_data(hotel)
+                # Extract and yield data for the selected categories
+                for category_name, json_key in selected_categories:
+                    if category_name in ['inboundCites', 'outboundCities']:
+                        for city in json_data.get(json_key, []):
+                            for hotel in city.get('recommendHotels', []):
+                                yield self.extract_hotel_data(hotel)
+                    else:
+                        for hotel in json_data.get(json_key, []):
+                            yield self.extract_hotel_data(hotel)
 
             except (AttributeError, json.JSONDecodeError) as e:
                 self.logger.error(f"Failed to extract JSON data. Error: {str(e)}")
@@ -136,13 +64,15 @@ class TripSpider(scrapy.Spider):
         images = [hotel.get('imgUrl')] if hotel.get('imgUrl') else []
 
         # Extend with URLs from pictureList where each entry is a dictionary with 'pictureUrl'
-        images.extend([pic['pictureUrl'] for pic in hotel.get('pictureList', []) if 'pictureUrl' in pic])
+        images.extend([pic['pictureUrl'] for pic in hotel.get('pictureList', []) if 'pictureUrl' in pic][:1])
 
         # Log the extracted image URLs for debugging
         self.logger.info(f"Extracted image URLs for hotel '{hotel.get('hotelName')}': {images}")
 
         # Download the images
         self.save_images(images, hotel.get('hotelName'))
+        amenities = [facility.get('name') for facility in hotel.get('hotelFacilityList', [])]
+        amenities_str = ",".join(amenities)  # Convert list to comma-separated string
 
         return HotelItem(
             hotelName=hotel.get('hotelName'),
@@ -150,7 +80,8 @@ class TripSpider(scrapy.Spider):
             lat=hotel.get('lat'),
             lon=hotel.get('lon'),
             rating=hotel.get('rating'),
-            images=images,  # Combined list of all image URLs
+            amenities=amenities_str,  # Store the amenities string
+            images=images,
             address=hotel.get('address'),
             cityName=hotel.get('cityName')
         )
@@ -172,7 +103,7 @@ class TripSpider(scrapy.Spider):
 
             # Construct the full image URL
             full_url = urllib.parse.urljoin('https://ak-d.tripcdn.com/images/', url)
-            
+
             image_path = os.path.join(directory, f'image_{i + 1}.jpg')
             try:
                 # Log the full URL being downloaded for debugging
