@@ -1,8 +1,5 @@
 import scrapy
 
-class TripScraperItem(scrapy.Item):
-    pass
-
 class HotelItem(scrapy.Item):
     hotelName = scrapy.Field()
     description = scrapy.Field()
@@ -12,3 +9,7 @@ class HotelItem(scrapy.Item):
     images = scrapy.Field()
     address = scrapy.Field()
     cityName = scrapy.Field()
+
+
+# items.py
+
