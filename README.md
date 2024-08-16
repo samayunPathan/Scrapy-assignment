@@ -22,14 +22,15 @@ This Trip Scraper project involves building a Scrapy web crawler that fetches lo
 ## Project Overview
 The Trip Scraper project is designed to gather detailed information about hotels in various locations. It utilizes the Scrapy framework for web scraping and stores the collected data in a PostgreSQL database. The main focus of the scraper is on extracting hotel information such as:
 
-- Title
-- Images
-- Rating
-- Latitude and Longitude
-- Location
-- Room Type
-- Price
-- City
+- hotelName 
+- description
+- latitude 
+- longitude 
+- rating 
+- amenities 
+- images 
+- address 
+- cityName 
 
 ## Features
 - Scrapes hotel data from multiple locations.
@@ -111,8 +112,8 @@ The Hotel model in trip_scraper/models/hotel.py defines the structure of the dat
 
 - hotelName 
 - description
-- lat 
-- lon 
+- lat
+- lon
 - rating 
 - amenities 
 - images 
