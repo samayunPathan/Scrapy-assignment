@@ -77,7 +77,9 @@ trip_scraper/
 git clone https://github.com/samayunPathan/Scrapy-assignment.git
 ```
 
-`cd trip_scraper`
+``` bash
+cd trip_scraper
+```
 
 2. Create and activate a virtual environment:
 
