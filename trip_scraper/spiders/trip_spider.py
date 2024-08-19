@@ -66,11 +66,9 @@ class TripSpider(scrapy.Spider):
         # Extend with URLs from pictureList where each entry is a dictionary with 'pictureUrl'
         images.extend([pic['pictureUrl'] for pic in hotel.get('pictureList', []) if 'pictureUrl' in pic][:1])
 
-        # Log the extracted image URLs for debugging
-        self.logger.info(f"Extracted image URLs for hotel '{hotel.get('hotelName')}': {images}")
-
-        # Download the images
-        self.save_images(images, hotel.get('hotelName'))
+        # Download the images and get the relative paths
+        relative_image_paths = self.save_images(images, hotel.get('hotelName'))
+        
         amenities = [facility.get('name') for facility in hotel.get('hotelFacilityList', [])]
         amenities_str = ",".join(amenities)  # Convert list to comma-separated string
 
@@ -82,13 +80,14 @@ class TripSpider(scrapy.Spider):
             lon=hotel.get('lon'),
             rating=hotel.get('rating'),
             amenities=amenities_str,  # Store the amenities string
-            images=images,
+            images=relative_image_paths,  # Store the relative image paths
             address=hotel.get('address'),
             cityName=hotel.get('cityName')
         )
 
+
     def save_images(self, images, hotel_name):
-        """Save images to a local directory."""
+        """Save images to a local directory and return the relative paths."""
         # Ensure hotel name is valid for folder creation
         safe_hotel_name = re.sub(r'[^a-zA-Z0-9]', '_', hotel_name)
         directory = os.path.join('images', safe_hotel_name)
@@ -96,6 +95,8 @@ class TripSpider(scrapy.Spider):
         # Create the directory if it doesn't exist
         if not os.path.exists(directory):
             os.makedirs(directory)
+
+        relative_paths = []  # Store relative paths of saved images
 
         for i, url in enumerate(images):
             # Ensure that the URL doesn't start with a slash before joining
@@ -112,5 +113,12 @@ class TripSpider(scrapy.Spider):
 
                 urllib.request.urlretrieve(full_url, image_path)
                 self.logger.info(f"Saved image {i + 1} for hotel '{hotel_name}' at {image_path}")
+
+                # Append the relative path to the list
+                relative_paths.append(os.path.relpath(image_path, start='images'))
             except Exception as e:
                 self.logger.error(f"Failed to save image {i + 1} for hotel '{hotel_name}' from URL {full_url}: {str(e)}")
+
+        return relative_paths  # Return the list of relative paths
+
+

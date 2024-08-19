@@ -5,7 +5,7 @@ class TripScraperPipeline:
         self.session = Session()
 
     def process_item(self, item, spider):
-        # Convert the list of images to a comma-separated string
+        # Convert the list of relative image paths to a comma-separated string
         images_str = ','.join(item['images']) if item['images'] else None
 
         # Try to find an existing hotel by hotelId
@@ -19,7 +19,7 @@ class TripScraperPipeline:
             hotel.lon = item.get('lon')
             hotel.rating = item.get('rating')
             hotel.amenities = item.get('amenities')
-            hotel.images = images_str
+            hotel.images = images_str  # Store the relative image paths
             hotel.address = item.get('address')
             hotel.cityName = item.get('cityName')
         else:
@@ -32,7 +32,7 @@ class TripScraperPipeline:
                 lon=item.get('lon'),
                 rating=item.get('rating'),
                 amenities=item.get('amenities'),
-                images=images_str,
+                images=images_str,  # Store the relative image paths
                 address=item.get('address'),
                 cityName=item.get('cityName')
             )
