@@ -24,7 +24,5 @@ DOWNLOADER_MIDDLEWARES = {
 
 
 ITEM_PIPELINES = {
-   'trip_scraper.pipelines.TripScraperPipeline': 300,
+    'trip_scraper.pipelines.TripScraperPipeline': 300,
 }
-
-

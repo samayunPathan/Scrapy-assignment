@@ -11,6 +11,7 @@ class HotelItem(scrapy.Item):
     images = scrapy.Field()
     address = scrapy.Field()
     cityName = scrapy.Field()
+    city_id = scrapy.Field()  # Add this line
 
 
 

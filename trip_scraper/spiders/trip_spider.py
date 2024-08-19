@@ -34,21 +34,33 @@ class TripSpider(scrapy.Spider):
                 # Categories to choose from
                 categories = [
                     ('fiveStarHotels', 'fiveStarHotels'),
-                    ('chepHotels', 'chepHotels'),
+                    ('cheapHotels', 'cheapHotels'),
                     ('hostelHotels', 'hostelHotels'),
-                    ('inboundCites', 'inboundCites'),
+                    ('inboundCities', 'inboundCities'),
                     ('outboundCities', 'outboundCities')
                 ]
 
-                # Randomly select 3 categories
-                selected_categories = random.sample(categories, 3)
+             # Debugging: Log the categories before sampling
+                self.logger.info(f"Categories before sampling: {categories}")
 
-                # Extract and yield data for the selected categories
+                try:
+                    # Randomly select 3 categories
+                    selected_categories = random.sample(categories,3)
+                    self.logger.info(f"Selected categories: {selected_categories}")
+
+                except ValueError as e:
+                    # Handle the error if there aren't enough items in the list
+                    self.logger.error(f"Error sampling categories: {str(e)}")
+                    selected_categories = categories  # Fallback to using all categories
+                # Logic for selected categories
                 for category_name, json_key in selected_categories:
-                    if category_name in ['inboundCites', 'outboundCities']:
+                    if category_name in ['inboundCities', 'outboundCities']:
                         for city in json_data.get(json_key, []):
+                            city_id = city.get('id')
                             for hotel in city.get('recommendHotels', []):
-                                yield self.extract_hotel_data(hotel)
+                                hotel_data = self.extract_hotel_data(hotel)
+                                hotel_data['city_id'] = city_id  # Attach city id to each hotel
+                                yield hotel_data
                     else:
                         for hotel in json_data.get(json_key, []):
                             yield self.extract_hotel_data(hotel)
@@ -79,10 +91,11 @@ class TripSpider(scrapy.Spider):
             lat=hotel.get('lat'),
             lon=hotel.get('lon'),
             rating=hotel.get('rating'),
-            amenities=amenities_str,  # Store the amenities string
-            images=relative_image_paths,  # Store the relative image paths
+            amenities=amenities_str,  
+            images=relative_image_paths,  
             address=hotel.get('address'),
-            cityName=hotel.get('cityName')
+            cityName=hotel.get('cityName'),
+            city_id= hotel.get('city_id')
         )
 
 
@@ -96,10 +109,10 @@ class TripSpider(scrapy.Spider):
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-        relative_paths = []  # Store relative paths of saved images
+        relative_paths = [] 
 
         for i, url in enumerate(images):
-            # Ensure that the URL doesn't start with a slash before joining
+        
             if url.startswith("/"):
                 url = url.lstrip("/")  # Remove the leading slash
 
