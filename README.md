@@ -14,9 +14,8 @@ This Trip Scraper project involves building a Scrapy web crawler that fetches lo
 5. [Configuration](#Configuration)
 6. [Database Setup](#Database-Setup)
 7. [Data Model](#Data-Model)
-8. [Scrapy Settings](#Scrapy-Settings)
-9. [Running the Scraper](#Running-the-Scraper)
-10. [Dependencies](#Dependencies)
+8. [Running the Scraper](#Running-the-Scraper)
+9. [Dependencies](#Dependencies)
 
 
 ## Project Overview
@@ -114,8 +113,6 @@ When project run database will automatically create Database. Create .env file a
 
 `DATABASE_URI = 'postgresql://username:password@localhost:port/database_name'`
 
-## Scrapy Settings
-You can configure the Scrapy settings in trip_scraper/settings.py to customize the scraping behavior, such as user agents, download delays, and pipelines.
 
 ## Running the Scraper
 To run the scraper and start collecting hotel data, use the following command:
